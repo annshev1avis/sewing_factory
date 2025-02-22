@@ -23,11 +23,14 @@ class FabricRemainsWindow(QWidget):
         self.ui.comboBox.currentIndexChanged.connect(self.update_table)
         self.ui.radioButton.toggled.connect(self.update_table)
 
+        self.update_table()
+
     def load_materials(self):
         query = "SELECT DISTINCT material.name FROM material"
         self.cursor.execute(query)
         materials = self.cursor.fetchall()
-        
+
+        self.ui.comboBox.addItem("Все")
         for material in materials:
             self.ui.comboBox.addItem(material[0])
 
@@ -39,16 +42,30 @@ class FabricRemainsWindow(QWidget):
         
         sort_order = "ASC" if self.ui.radioButton.isChecked() else "DESC"
 
-        query = f"""
-            SELECT m.name, wo.width, wo.length,
-            wo.quantity, wo.timestamp
-            FROM write_off wo
-            JOIN material m ON wo.material_id = m.id
-            join material_category cat on m.id_category = cat.id
-            WHERE m.name = %s and wo.can_be_used = true and cat.name = "Ткань"
-            order by wo.quantity {sort_order}
-        """
-        self.cursor.execute(query, (material, ))
+        if material == "Все":
+            query = f"""
+                SELECT m.name, wo.width, wo.length,
+                wo.quantity, wo.timestamp
+                FROM write_off wo
+                JOIN material m ON wo.material_id = m.id
+                join material_category cat on m.id_category = cat.id
+                WHERE wo.can_be_used = true and cat.name = "Ткань"
+                order by wo.quantity {sort_order}
+            """
+            self.cursor.execute(query)
+        else:
+            query = f"""
+                SELECT m.name, wo.width, wo.length,
+                wo.quantity, wo.timestamp
+                FROM write_off wo
+                JOIN material m ON wo.material_id = m.id
+                join material_category cat on m.id_category = cat.id
+                WHERE wo.can_be_used = true and cat.name = "Ткань"   
+                and m.name = "{material}"
+                order by wo.quantity {sort_order}
+            """
+            self.cursor.execute(query)
+
         remains = self.cursor.fetchall()
 
         self.ui.tableWidget.setRowCount(len(remains))
