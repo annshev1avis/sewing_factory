@@ -1,5 +1,6 @@
-from PyQt6 import QtCore, QtGui, QtWidgets
 from db import Database
+import matplotlib.pyplot as plt
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from write_offs_ui_form import Ui_Form
 
@@ -31,13 +32,11 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
         self.ui.material_combobox.currentTextChanged.connect(self.update_table)
         self.ui.reason_combobox.currentTextChanged.connect(self.update_table)
+        self.ui.graph_pushbutton.clicked.connect(self.draw_plots)
 
         self.update_table()
 
-    def update_table(self):
-        self.ui.materials_table.clearContents()
-        self.ui.materials_table.setRowCount(0)
-
+    def get_filtered_data_for_table(self):
         selected_material = self.ui.material_combobox.currentText()
         selected_reason = self.ui.reason_combobox.currentText()
 
@@ -48,6 +47,14 @@ class WriteOffsWindow(QtWidgets.QWidget):
             material=selected_material if selected_material else None,
             reason=selected_reason if selected_reason else None
         )
+
+        return data
+
+    def update_table(self):
+        self.ui.materials_table.clearContents()
+        self.ui.materials_table.setRowCount(0)
+
+        data = self.get_filtered_data_for_table()
 
         if data:
             self.ui.materials_table.setRowCount(len(data))
@@ -60,6 +67,57 @@ class WriteOffsWindow(QtWidgets.QWidget):
             header = self.ui.materials_table.horizontalHeader()
             header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
 
+    def get_materials_graph_data(self):
+        data = self.get_filtered_data_for_table()
+        materials = [data[i][0] for i in range(len(data))]
+        amounts = [
+            data[i][1] * data[i][2] * data[i][3] if data[i][1] and data[i][2] else data[i][3]
+            for i in range(len(data))
+        ]
+
+        grouped_data = dict.fromkeys(set(materials), 0)
+        for i in range(len(materials)):
+            grouped_data[materials[i]] += amounts[i]
+
+        return grouped_data
+
+    def get_reasons_grouped_data(self):
+        data = self.get_filtered_data_for_table()
+        reasons = [data[i][4] for i in range(len(data))]
+        amounts = [
+            data[i][1] * data[i][2] * data[i][3] if data[i][1] and data[i][2] else data[i][3]
+            for i in range(len(data))
+        ]
+
+        grouped_data = dict.fromkeys(set(reasons), 0)
+        for i in range(len(reasons)):
+            grouped_data[reasons[i]] += amounts[i]
+
+        return grouped_data
+
+    def draw_plots(self):
+        fig, ax = plt.subplots(1, 2, figsize=(10, 6))
+
+        ax[0].set_title('Списания по материалам')
+        materials_data = self.get_materials_graph_data()
+        ax[0].pie(
+            materials_data.values(),
+            labels=materials_data.keys(),
+            autopct='%1.1f%%',
+            startangle=140
+        )
+
+        ax[1].set_title('Списания по причинам')
+        reasons_data = self.get_reasons_grouped_data()
+        ax[1].pie(
+            reasons_data.values(),
+            labels=reasons_data.keys(),
+            autopct='%1.1f%%',
+            startangle=140
+        )
+
+        plt.tight_layout()
+        plt.show()
 
 if __name__ == "__main__":
     import sys

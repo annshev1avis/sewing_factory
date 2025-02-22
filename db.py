@@ -9,7 +9,9 @@ class Database:
             password="",
             database="sewing_factory"
         )
+
         self.cursor = self.conn.cursor()
+
 
     def get_materials(self):
         self.cursor.execute('select DISTINCT(name) from material '
