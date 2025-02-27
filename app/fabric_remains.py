@@ -1,8 +1,13 @@
+import os
 import sys
 
+import dotenv
 from PyQt6.QtWidgets import QApplication, QWidget, QTableWidgetItem
 import pymysql
 from app.ui.fabric_remains_ui_form import Ui_Form
+
+
+dotenv.load_dotenv()
 
 
 class FabricRemainsWindow(QWidget):
@@ -10,10 +15,10 @@ class FabricRemainsWindow(QWidget):
         super().__init__()
 
         self.db = pymysql.connect(
-            host="localhost",
-            user="root",
-            password="",
-            database="sewing_factory"
+            host=os.getenv("HOST"),
+            user=os.getenv("USER"),
+            password=os.getenv("PASSWORD"),
+            database=os.getenv("DATABASE")
         )
         self.cursor = self.db.cursor()
         self.ui = Ui_Form()
@@ -26,7 +31,11 @@ class FabricRemainsWindow(QWidget):
         self.update_table()
 
     def load_materials(self):
-        query = "SELECT DISTINCT material.name FROM material"
+        query = """
+            select distinct m.name 
+            from material m inner join material_category cat on m.id_category = cat.id
+            where cat.name = "Ткань" 
+        """
         self.cursor.execute(query)
         materials = self.cursor.fetchall()
 
@@ -36,41 +45,38 @@ class FabricRemainsWindow(QWidget):
 
     def update_table(self):
         material = self.ui.comboBox.currentText()
-
-        self.cursor.execute(f"describe material")
-        names = list(i[0] for i in self.cursor.fetchall())[1:]
-        
         sort_order = "ASC" if self.ui.radioButton.isChecked() else "DESC"
 
         if material == "Все":
             query = f"""
-                SELECT m.name, wo.width, wo.length,
-                wo.quantity, wo.timestamp
-                FROM write_off wo
-                JOIN material m ON wo.material_id = m.id
-                join material_category cat on m.id_category = cat.id
-                WHERE wo.can_be_used = true and cat.name = "Ткань"
-                order by wo.quantity {sort_order}
+                select material_name, quantity, width, length, width * length, 
+                timestamp, purchase_price * quantity
+                from write_off_with_material_data
+                where can_be_used = True
+                order by width * length {sort_order}
             """
             self.cursor.execute(query)
         else:
             query = f"""
-                SELECT m.name, wo.width, wo.length,
-                wo.quantity, wo.timestamp
-                FROM write_off wo
-                JOIN material m ON wo.material_id = m.id
-                join material_category cat on m.id_category = cat.id
-                WHERE wo.can_be_used = true and cat.name = "Ткань"   
-                and m.name = "{material}"
-                order by wo.quantity {sort_order}
+                select material_name, quantity, width, length, width * length, 
+                timestamp, purchase_price * quantity
+                from write_off_with_material_data
+                where can_be_used = True and material_name = "{material}"
+                order by width * length {sort_order}
             """
             self.cursor.execute(query)
 
         remains = self.cursor.fetchall()
 
         self.ui.tableWidget.setRowCount(len(remains))
-        self.ui.tableWidget.setColumnCount(3)
-        self.ui.tableWidget.setHorizontalHeaderLabels(["Материал", "Причина", "Количество"])
+        self.ui.tableWidget.setColumnCount(len(remains[0]))
+        self.ui.tableWidget.setHorizontalHeaderLabels(
+            [
+                "Ткань", "Количество рулонов", "Высота (м)",
+                "Ширина (м)", "Количество в м2", "Дата появления",
+                "Стоимость",
+            ]
+        )
 
         for row, remain in enumerate(remains):
             for col, data in enumerate(remain):

@@ -16,8 +16,9 @@ class WriteOffsWindow(QtWidgets.QWidget):
         self.cursor = self.db.cursor
 
         headers = [
-                "Материал", "Ширина", "Длина",
-                "Количество", "Причина", "Дата",
+            "Материал", "Ширина", "Длина",
+            "Количество", "Причина", "Дата",
+            "Стоимость",
         ]
         self.ui.materials_table.setRowCount(0)
         self.ui.materials_table.setColumnCount(len(headers))
