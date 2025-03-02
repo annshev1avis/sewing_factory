@@ -15,21 +15,9 @@ class WriteOffsWindow(QtWidgets.QWidget):
         self.db = Database()
         self.cursor = self.db.cursor
 
-        headers = [
-            "Материал", "Ширина", "Длина",
-            "Количество", "Причина", "Дата",
-            "Стоимость",
-        ]
-        self.ui.materials_table.setRowCount(0)
-        self.ui.materials_table.setColumnCount(len(headers))
-        self.ui.materials_table.setHorizontalHeaderLabels(
-            headers
-        )
-
-        self.ui.material_combobox.addItem('Все')
-        self.ui.reason_combobox.addItem('Все')
-        self.ui.material_combobox.addItems(self.db.get_materials())
-        self.ui.reason_combobox.addItems(self.db.get_reasons())
+        self.configure_table_headers()
+        self.configure_material_combobox()
+        self.configure_reason_combobox()
 
         self.ui.material_combobox.currentTextChanged.connect(self.update_table)
         self.ui.reason_combobox.currentTextChanged.connect(self.update_table)
@@ -37,12 +25,28 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
         self.update_table()
 
-    def get_filtered_data_for_table(self):
+    def configure_table_headers(self):
+        headers = [
+            "Материал", "Ширина", "Длина",
+            "Количество", "Причина", "Дата",
+            "Стоимость",
+        ]
+        self.ui.materials_table.setColumnCount(len(headers))
+        self.ui.materials_table.setHorizontalHeaderLabels(
+            headers
+        )
+
+    def configure_material_combobox(self):
+        self.ui.material_combobox.addItem('Все')
+        self.ui.material_combobox.addItems(self.db.get_materials())
+
+    def configure_reason_combobox(self):
+        self.ui.reason_combobox.addItem('Все')
+        self.ui.reason_combobox.addItems(self.db.get_reasons())
+
+    def get_filtered_write_offs(self):
         selected_material = self.ui.material_combobox.currentText()
         selected_reason = self.ui.reason_combobox.currentText()
-
-        if not selected_material and not selected_reason:
-            return
 
         data = self.db.get_write_offs(
             material=selected_material if selected_material else None,
@@ -51,26 +55,41 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
         return data
 
+    def add_total_cost_line(self, data):
+        total_remains_cost = sum([r[-1] for r in data])
+        self.ui.materials_table.setItem(
+            self.ui.materials_table.rowCount() - 1,
+            self.ui.materials_table.columnCount() - 2,
+            QtWidgets.QTableWidgetItem("Итого:"),
+        )
+        self.ui.materials_table.setItem(
+            self.ui.materials_table.rowCount() - 1,
+            self.ui.materials_table.columnCount() - 1,
+            QtWidgets.QTableWidgetItem(str(total_remains_cost))
+        )
+
+    def adjust_column_size(self):
+        self.ui.materials_table.resizeColumnsToContents()
+        header = self.ui.materials_table.horizontalHeader()
+        header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
+
     def update_table(self):
         self.ui.materials_table.clearContents()
-        self.ui.materials_table.setRowCount(0)
 
-        data = self.get_filtered_data_for_table()
+        data = self.get_filtered_write_offs()
 
-        if data:
-            self.ui.materials_table.setRowCount(len(data))
+        self.ui.materials_table.setRowCount(len(data) + 1)
+        for row_num, row_data in enumerate(data):
+            for col_num, col_data in enumerate(row_data):
+                self.ui.materials_table.setItem(row_num, col_num, QtWidgets.QTableWidgetItem(str(col_data)))
+        self.add_total_cost_line(data)
 
-            for row_num, row_data in enumerate(data):
-                for col_num, col_data in enumerate(row_data):
-                    self.ui.materials_table.setItem(row_num, col_num, QtWidgets.QTableWidgetItem(str(col_data)))
+        self.adjust_column_size()
 
-            self.ui.materials_table.resizeColumnsToContents()
-            header = self.ui.materials_table.horizontalHeader()
-            header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeMode.Stretch)
-
-    def get_materials_graph_data(self):
-        data = self.get_filtered_data_for_table()
-        materials = [data[i][0] for i in range(len(data))]
+    def get_materials_grouped_data(self):
+        data = self.get_filtered_write_offs()
+        material_index = 0
+        materials = [data[i][material_index] for i in range(len(data))]
         amounts = [
             data[i][1] * data[i][2] * data[i][3] if data[i][1] and data[i][2] else data[i][3]
             for i in range(len(data))
@@ -83,7 +102,7 @@ class WriteOffsWindow(QtWidgets.QWidget):
         return grouped_data
 
     def get_reasons_grouped_data(self):
-        data = self.get_filtered_data_for_table()
+        data = self.get_filtered_write_offs()
         reasons = [data[i][4] for i in range(len(data))]
         amounts = [
             data[i][1] * data[i][2] * data[i][3] if data[i][1] and data[i][2] else data[i][3]
@@ -100,7 +119,7 @@ class WriteOffsWindow(QtWidgets.QWidget):
         fig, ax = plt.subplots(1, 2, figsize=(10, 6))
 
         ax[0].set_title('Списания по материалам')
-        materials_data = self.get_materials_graph_data()
+        materials_data = self.get_materials_grouped_data()
         ax[0].pie(
             materials_data.values(),
             labels=materials_data.keys(),
@@ -119,6 +138,7 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
         plt.tight_layout()
         plt.show()
+
 
 if __name__ == "__main__":
     import sys
