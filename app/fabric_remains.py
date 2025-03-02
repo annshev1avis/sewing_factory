@@ -11,15 +11,10 @@ dotenv.load_dotenv()
 
 
 class FabricRemainsWindow(QWidget):
-    def __init__(self):
+    def __init__(self, db_connection):
         super().__init__()
 
-        self.db = pymysql.connect(
-            host=os.getenv("HOST"),
-            user=os.getenv("USER"),
-            password=os.getenv("PASSWORD"),
-            database=os.getenv("DATABASE")
-        )
+        self.db = db_connection
         self.cursor = self.db.cursor()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -131,6 +126,14 @@ class FabricRemainsWindow(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = FabricRemainsWindow()
+
+    db_connection = pymysql.connect(
+        host=os.getenv("HOST"),
+        user=os.getenv("USER"),
+        password=os.getenv("PASSWORD"),
+        database=os.getenv("DATABASE")
+    )
+
+    window = FabricRemainsWindow(db_connection)
     window.show()
     sys.exit(app.exec())

@@ -18,7 +18,6 @@ class Database:
 
         self.cursor = self.conn.cursor()
 
-
     def get_materials(self):
         self.cursor.execute(
             'select distinct material_name'
@@ -56,3 +55,20 @@ class Database:
         self.cursor.execute(query, params)
         result = self.cursor.fetchall()
         return result
+
+    def get_personal_data(self, username, password):
+        query = "SELECT * FROM worker WHERE login = %s AND password = %s"
+        self.cursor.execute(query, (username, password))
+        res = self.cursor.fetchone()
+
+        if res:
+            query = "SELECT id_role FROM worker WHERE login = %s AND password = %s"
+            self.cursor.execute(query, (username, password))
+            role = self.cursor.fetchone()[0]
+            return res, role
+
+        return res
+
+    def close(self):
+        self.cursor.close()
+        self.conn.close()
