@@ -4,7 +4,7 @@ import sys
 import dotenv
 from PyQt6.QtWidgets import QApplication, QWidget, QTableWidgetItem, QHeaderView
 import pymysql
-from app.ui.fabric_remains_ui_form import Ui_Form
+from ui.fabric_remains_ui_form import Ui_Form
 
 
 dotenv.load_dotenv()

@@ -7,8 +7,8 @@ import sys
 
 from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
 
-from app.fabric_remains import FabricRemainsWindow
-from app.write_offs import WriteOffsWindow
+from fabric_remains import FabricRemainsWindow
+from write_offs import WriteOffsWindow
 
 class PresentationWindow(QWidget):
     def __init__(self):

@@ -1,8 +1,8 @@
-from app.db import Database
+from db import Database
 import matplotlib.pyplot as plt
 from PyQt6 import QtCore, QtGui, QtWidgets
 
-from app.ui.write_offs_ui_form import Ui_Form
+from ui.write_offs_ui_form import Ui_Form
 
 
 class WriteOffsWindow(QtWidgets.QWidget):
