@@ -21,8 +21,10 @@ class FabricRemainsWindow(QWidget):
             database=os.getenv("DATABASE")
         )
         self.cursor = self.db.cursor()
+
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.setWindowTitle("Списанные материалы")
 
         self.fill_material_combobox()
         self.configure_table_headers()
@@ -39,7 +41,7 @@ class FabricRemainsWindow(QWidget):
         headers = [
             "Ткань", "Количество рулонов", "Высота (м)",
             "Ширина (м)", "Количество в м2", "Дата появления",
-            "Стоимость",
+            "Стоимость (руб.)",
         ]
         self.ui.tableWidget.setColumnCount(len(headers))
         self.ui.tableWidget.setHorizontalHeaderLabels(headers)

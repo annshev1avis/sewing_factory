@@ -54,6 +54,7 @@ class AuthorizationWindow(QtWidgets.QWidget):
         self.allowed_roles = allowed_roles
         self.main_window_class = main_window_class
 
+        self.setWindowTitle("Авторизация")
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 

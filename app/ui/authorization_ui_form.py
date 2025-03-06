@@ -37,7 +37,7 @@ class Ui_Form(object):
         self.label_logo = QtWidgets.QLabel(parent=Form)
         self.label_logo.setGeometry(QtCore.QRect(500, 20, 150, 150))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("data/ui\\../проект бабаева/logo-02.jpg"))
+        self.label_logo.setPixmap(QtGui.QPixmap("../resources/logo-01.jpg"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
 

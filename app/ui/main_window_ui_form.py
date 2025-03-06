@@ -14,7 +14,12 @@ class Ui_Form(object):
         Form.setObjectName("Form")
         Form.resize(599, 489)
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("data/ui\\../../resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        import os
+        import sys
+        script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
+        print(script_directory)
+
+        icon.addPixmap(QtGui.QPixmap("../resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)
         Form.setStyleSheet("#Form{\n"
 "    background-color: rgb(181, 213, 202);\n"
@@ -44,7 +49,7 @@ class Ui_Form(object):
         self.label_2.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         self.label_2.setText("")
         print()
-        self.label_2.setPixmap(QtGui.QPixmap("/resources/logo-01.jpg"))
+        self.label_2.setPixmap(QtGui.QPixmap("../resources/logo-01.jpg"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
         self.widget = QtWidgets.QWidget(parent=Form)
@@ -74,7 +79,7 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Главное окно"))
         self.label.setText(_translate("Form", "Учет затрат и остатков"))
         self.fabric_remains_button.setText(_translate("Form", "Остатки ткани\n"
 "(можно использовать)"))

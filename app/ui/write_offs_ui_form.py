@@ -105,7 +105,7 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.icon_label.sizePolicy().hasHeightForWidth())
         self.icon_label.setSizePolicy(sizePolicy)
         self.icon_label.setText("")
-        self.icon_label.setPixmap(QtGui.QPixmap("data/ui\\../проект бабаева/logo-02.jpg"))
+        self.icon_label.setPixmap(QtGui.QPixmap("../logo-01.jpg"))
         self.icon_label.setScaledContents(True)
         self.icon_label.setObjectName("icon_label")
         self.verticalLayout.addWidget(self.icon_label)

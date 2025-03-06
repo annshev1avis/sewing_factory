@@ -11,6 +11,7 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
+        self.setWindowTitle("Остатки ткани")
 
         self.db = Database()
         self.cursor = self.db.cursor
@@ -27,9 +28,9 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
     def configure_table_headers(self):
         headers = [
-            "Материал", "Ширина", "Длина",
-            "Количество", "Причина", "Дата",
-            "Стоимость",
+            "Материал", "Ширина (м)", "Длина (м)",
+            "Количество (рулон/шт)", "Причина", "Дата",
+            "Стоимость (руб.)",
         ]
         self.ui.materials_table.setColumnCount(len(headers))
         self.ui.materials_table.setHorizontalHeaderLabels(
