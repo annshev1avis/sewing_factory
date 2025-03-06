@@ -13,6 +13,9 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(1070, 695)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("data/ui\\../../resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        Form.setWindowIcon(icon)
         Form.setStyleSheet("#Form{\n"
 "    background-color:rgb(181, 213, 202);\n"
 "}\n"

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>../../resources/logo-02.jpg</normaloff>../../resources/logo-02.jpg</iconset>
+  </property>
   <property name="styleSheet">
    <string notr="true">#Form{
 	background-color:rgb(181, 213, 202);

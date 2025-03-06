@@ -85,6 +85,7 @@ class WriteOffsWindow(QtWidgets.QWidget):
         self.add_total_cost_line(data)
 
         self.adjust_column_size()
+        self.ui.materials_table.setSortingEnabled(True)
 
     def get_materials_grouped_data(self):
         data = self.get_filtered_write_offs()

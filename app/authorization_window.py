@@ -6,7 +6,7 @@ import pymysql
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QApplication
 
-from presentation_window import PresentationWindow
+from main_window import MainWindow
 from ui.authorization_ui_form import Ui_Form
 
 
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     # подставить данные своего модуля
     authorization = AuthorizationWindow(
         allowed_roles=[1, 2],
-        main_window_class=PresentationWindow,
+        main_window_class=MainWindow,
     )
     authorization.show()
     sys.exit(app.exec())
