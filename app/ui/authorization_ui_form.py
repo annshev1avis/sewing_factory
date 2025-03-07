@@ -4,6 +4,9 @@ class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
         Form.resize(700, 700)  # Фиксированный размер окна 700x700
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap("resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        Form.setWindowIcon(icon)
         Form.setStyleSheet("""
             #Form {
                 background-color: rgb(181, 213, 202);
@@ -15,6 +18,9 @@ class Ui_Form(object):
                 font-size: 12pt;
                 color: rgb(0, 0, 0);
                 font-family: "MS Shell Dlg 2";
+            }
+            QPushButton:hover {
+                background-color: rgb(200, 150, 155);
             }
             QLabel {
                 font-size: 14pt;
@@ -37,7 +43,7 @@ class Ui_Form(object):
         self.label_logo = QtWidgets.QLabel(parent=Form)
         self.label_logo.setGeometry(QtCore.QRect(500, 20, 150, 150))
         self.label_logo.setText("")
-        self.label_logo.setPixmap(QtGui.QPixmap("../resources/logo-01.jpg"))
+        self.label_logo.setPixmap(QtGui.QPixmap("resources/logo-01.jpg"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")
 
