@@ -5,12 +5,12 @@ from authorization_window import CustomMessageBox
 
 
 class AddPositionWindow(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, db):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 
-        self.db = Database()
+        self.db = db
         self.cursor = self.db.cursor
 
         self.ui.pushButton_add.clicked.connect(self.add_position)
@@ -23,7 +23,7 @@ class AddPositionWindow(QtWidgets.QWidget):
 
             return
 
-        self.db.add_pos(position_name)
+        self.db.add_role(position_name)
 
         QtWidgets.QMessageBox.information(self, "Успех", "Должность успешно добавлена.")
         self.ui.lineEdit_position_name.clear()
@@ -41,6 +41,9 @@ if __name__ == "__main__":
     import sys
 
     app = QApplication(sys.argv)
-    presentation = AddPositionWindow()
+
+    db = Database()
+    presentation = AddPositionWindow(db)
     presentation.show()
+
     sys.exit(app.exec())

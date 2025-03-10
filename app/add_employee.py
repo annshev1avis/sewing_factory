@@ -5,20 +5,19 @@ from authorization_window import CustomMessageBox
 
 
 class AddEmployeeWindow(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, db):
         super().__init__()
         self.ui = Ui_Form()
         self.ui.setupUi(self)
 
-        self.db = Database()
-        self.cursor = self.db.cursor
+        self.db = db
 
         self.load_roles()
 
         self.ui.pushButton_add.clicked.connect(self.add_employee)
 
     def load_roles(self):
-        roles = self.db.get_positions()
+        roles = self.db.get_roles()
         for role in roles:
             self.ui.comboBox_role.addItem(role[1], role[0])
 
@@ -73,6 +72,9 @@ if __name__ == "__main__":
     import sys
 
     app = QApplication(sys.argv)
-    presentation = AddEmployeeWindow()
+
+    db = Database()
+    presentation = AddEmployeeWindow(db)
     presentation.show()
+
     sys.exit(app.exec())

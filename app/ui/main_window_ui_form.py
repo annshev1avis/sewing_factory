@@ -14,23 +14,20 @@ class Ui_Form(object):
         Form.setObjectName("Form")
         Form.resize(599, 489)
         icon = QtGui.QIcon()
-        import os
-        import sys
-        script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-        print(script_directory)
 
-        icon.addPixmap(QtGui.QPixmap("../resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
+        icon.addPixmap(QtGui.QPixmap("resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)
-        Form.setStyleSheet("#Form{\n"
-"    background-color: rgb(181, 213, 202);\n"
-"}\n"
-"\n"
-"QPushButton{\n"
-"border: none;\n"
-"                border-radius: 6px;\n"
-"                font-size: 12pt;\n"
-"    background-color: rgb(224, 169, 175);\n"
-"}")
+        Form.setStyleSheet("""
+            #Form{
+                background-color: rgb(181, 213, 202);
+            }
+            QPushButton{
+                border: none;
+                border-radius: 6px;
+                font-size: 12pt;
+                background-color: rgb(224, 169, 175);
+            }"""
+        )
         self.label = QtWidgets.QLabel(parent=Form)
         self.label.setGeometry(QtCore.QRect(180, 260, 244, 28))
         font = QtGui.QFont()
@@ -49,7 +46,7 @@ class Ui_Form(object):
         self.label_2.setLayoutDirection(QtCore.Qt.LayoutDirection.LeftToRight)
         self.label_2.setText("")
         print()
-        self.label_2.setPixmap(QtGui.QPixmap("../resources/logo-01.jpg"))
+        self.label_2.setPixmap(QtGui.QPixmap("resources/logo-01.jpg"))
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
         self.widget = QtWidgets.QWidget(parent=Form)
