@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets
 from app.db import Database
 from app.ui.add_position_ui_form import Ui_Form
-from authorization_window import CustomMessageBox
+from app.authorization_window import CustomMessageBox
 
 
 class AddPositionWindow(QtWidgets.QWidget):
@@ -15,6 +15,16 @@ class AddPositionWindow(QtWidgets.QWidget):
 
         self.ui.pushButton_add.clicked.connect(self.add_position)
 
+        self.load_positions()
+
+    def load_positions(self):
+        self.ui.listWidget_positions.clear()
+
+        roles = [y for (x, y) in self.db.get_roles()]
+
+        for role in roles:
+            self.ui.listWidget_positions.addItem(role)
+
     def add_position(self):
         position_name = self.ui.lineEdit_position_name.text()
 
@@ -24,6 +34,8 @@ class AddPositionWindow(QtWidgets.QWidget):
             return
 
         self.db.add_role(position_name)
+
+        self.load_positions()
 
         QtWidgets.QMessageBox.information(self, "Успех", "Должность успешно добавлена.")
         self.ui.lineEdit_position_name.clear()

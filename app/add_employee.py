@@ -1,7 +1,7 @@
 from PyQt6 import QtWidgets
 from app.db import Database
 from app.ui.add_employee_ui_form import Ui_Form
-from authorization_window import CustomMessageBox
+from app.authorization_window import CustomMessageBox
 
 
 class AddEmployeeWindow(QtWidgets.QWidget):
@@ -14,12 +14,22 @@ class AddEmployeeWindow(QtWidgets.QWidget):
 
         self.load_roles()
 
+        self.load_employees()
+
         self.ui.pushButton_add.clicked.connect(self.add_employee)
 
     def load_roles(self):
         roles = self.db.get_roles()
         for role in roles:
             self.ui.comboBox_role.addItem(role[1], role[0])
+
+    def load_employees(self):
+        self.ui.listWidget_employees.clear()
+        employees = self.db.get_employees()
+
+        for employee in employees:
+            employee_info = f"{employee}"
+            self.ui.listWidget_employees.addItem(employee_info)
 
     def generate_login(self, role_name):
         login = role_name.lower() + 'log'

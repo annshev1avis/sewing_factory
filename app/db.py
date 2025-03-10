@@ -105,7 +105,15 @@ class Database:
                     where cat.name = "Ткань" 
                 """
         self.cursor.execute(query)
-        return  [material[0] for material in self.cursor.fetchall()]
+        return [material[0] for material in self.cursor.fetchall()]
+
+    def get_employees(self):
+        query = """
+            select concat(surname, ' ', name, ' ', patronymic, ' (' , role_name, ')') FROM worker 
+            inner join role on role.id = worker.id_role
+                """
+        self.cursor.execute(query)
+        return [x for (x,) in self.cursor.fetchall()]
 
     def close(self):
         self.cursor.close()

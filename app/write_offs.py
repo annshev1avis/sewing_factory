@@ -27,9 +27,9 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
     def configure_table_headers(self):
         headers = [
-            "Материал", "Ширина (м)", "Длина (м)",
+            "Материал", "Ширина (cм)", "Длина (cм)",
             "Количество (рулон/шт)", "Причина", "Дата",
-            "Стоимость (руб.)",
+            "Стоимость (руб)",
         ]
         self.ui.materials_table.setColumnCount(len(headers))
         self.ui.materials_table.setHorizontalHeaderLabels(

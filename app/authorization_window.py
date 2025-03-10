@@ -7,7 +7,7 @@ from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QApplication
 
 from app.db import Database
-from app.main_window import MainWindow
+
 from app.ui.authorization_ui_form import Ui_Form
 
 
@@ -104,12 +104,14 @@ class AuthorizationWindow(QtWidgets.QWidget):
             return
 
         if user[1] == 1:  # менеджер
-            pass
+            from app.main_window_manager import MainWindowManager
+            self.main_window = MainWindowManager(self.db_for_other_windows)
+            self.main_window.show()
         elif user[1] == 2:  # директор
-            pass
+            from app.main_window_director import MainWindowDirector
+            self.main_window = MainWindowDirector(self.db_for_other_windows)
+            self.main_window.show()
 
-        self.main_window = MainWindow(self.db_for_other_windows)
-        self.main_window.show()
         self.close()
 
     def show_error_message(self, message):

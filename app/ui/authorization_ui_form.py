@@ -42,7 +42,6 @@ class Ui_Form(object):
         # Логотип в правом верхнем углу
         self.label_logo = QtWidgets.QLabel(parent=Form)
         self.label_logo.setGeometry(QtCore.QRect(500, 20, 150, 150))
-        self.label_logo.setText("")
         self.label_logo.setPixmap(QtGui.QPixmap("resources/logo-01.jpg"))
         self.label_logo.setScaledContents(True)
         self.label_logo.setObjectName("label_logo")

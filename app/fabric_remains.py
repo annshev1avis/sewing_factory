@@ -6,7 +6,6 @@ from PyQt6.QtWidgets import QApplication, QWidget, QTableWidgetItem, QHeaderView
 from app.db import Database
 from app.ui.fabric_remains_ui_form import Ui_Form
 
-
 dotenv.load_dotenv()
 
 
@@ -33,9 +32,9 @@ class FabricRemainsWindow(QWidget):
         :return:
         """
         headers = [
-            "Ткань", "Количество рулонов", "Высота (м)",
-            "Ширина (м)", "Количество в м2", "Дата появления",
-            "Стоимость (руб.)",
+            "Ткань", "Количество рулонов", "Высота (cм)",
+            "Ширина (cм)", "Количество (м^2)", "Дата появления",
+            "Стоимость (руб)",
         ]
         self.ui.tableWidget.setColumnCount(len(headers))
         self.ui.tableWidget.setHorizontalHeaderLabels(headers)
@@ -98,6 +97,7 @@ class FabricRemainsWindow(QWidget):
         self.add_total_cost_line(remains)
 
         self.adjust_column_size()
+
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

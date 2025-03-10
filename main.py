@@ -4,7 +4,7 @@ from PyQt6.QtWidgets import QApplication
 
 from app.authorization_window import AuthorizationWindow
 from app.db import Database
-from app.main_window import MainWindow
+from app.main_window_manager import MainWindowManager
 
 
 app = QApplication(sys.argv)

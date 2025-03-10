@@ -8,14 +8,45 @@ class Ui_Form(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)
+        # Form.setStyleSheet("""
+        #     #Form {
+        #         background-color: rgb(181, 213, 202);
+        #     }
+        #     QTableWidget{
+        #         background-color: rgb(255, 252, 214);
+        #     }
+        # """)
         Form.setStyleSheet("""
-            #Form {
-                background-color: rgb(181, 213, 202);
-            }
-            QTableWidget{
-                background-color: rgb(255, 252, 214);           
-            }
-        """)
+                    #Form {
+                        background-color: rgb(181, 213, 202);
+                    }
+                    QPushButton {
+                        background-color: rgb(224, 169, 175);
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 12pt;
+                        color: rgb(0, 0, 0);
+                        font-family: "MS Shell Dlg 2";
+                    }
+                    QPushButton:hover {
+                        background-color: rgb(200, 150, 155);
+                    }
+                    QLabel {
+                        font-size: 14pt;
+                        color: rgb(0, 0, 0);
+                        font-family: "MS Shell Dlg 2";
+                    }
+                    QLineEdit {
+                        background-color: rgb(255, 255, 255);
+                        border-radius: 6px;
+                        font-size: 12pt;
+                        color: rgb(0, 0, 0);
+                        font-family: "MS Shell Dlg 2";
+                        padding: 5px;
+
+                    QMessage
+                    }
+                """)
         self.label = QtWidgets.QLabel(parent=Form)
         self.label.setGeometry(QtCore.QRect(110, 30, 191, 31))
         font = QtGui.QFont()
@@ -45,7 +76,7 @@ class Ui_Form(object):
         sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
         self.label_2.setSizePolicy(sizePolicy)
         self.label_2.setText("")
-        self.label_2.setPixmap(QtGui.QPixmap("resources/logo-01.jpg"))
+        self.label_2.setPixmap(QtGui.QPixmap("resources/logo-01.jpg"))  # Укажите путь к логотипу
         self.label_2.setScaledContents(True)
         self.label_2.setObjectName("label_2")
         self.layoutWidget = QtWidgets.QWidget(parent=Form)

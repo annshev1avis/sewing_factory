@@ -8,20 +8,51 @@ class Ui_Form(object):
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)
+        # Form.setStyleSheet("""
+        #     #Form{
+        #         background-color:rgb(181, 213, 202);
+        #     }
+        #     QPushButton{
+        #         background-color: rgb(224, 169, 175); /* Зеленый цвет */
+        #         border: none; /* Убираем рамку */
+        #         border-radius: 6px; /* Скругленные края */
+        #         font-size: 10pt;
+        #     }
+        #     QTableWidget{
+        #         background-color: rgb(255, 252, 214);
+        #     }
+        # )""")
         Form.setStyleSheet("""
-            #Form{
-                background-color:rgb(181, 213, 202);
-            }
-            QPushButton{
-                background-color: rgb(224, 169, 175); /* Зеленый цвет */
-                border: none; /* Убираем рамку */
-                border-radius: 6px; /* Скругленные края */
-                font-size: 10pt;
-            }
-            QTableWidget{
-                background-color: rgb(255, 252, 214);
-            }
-        )""")
+                    #Form {
+                        background-color: rgb(181, 213, 202);
+                    }
+                    QPushButton {
+                        background-color: rgb(224, 169, 175);
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 12pt;
+                        color: rgb(0, 0, 0);
+                        font-family: "MS Shell Dlg 2";
+                    }
+                    QPushButton:hover {
+                        background-color: rgb(200, 150, 155);
+                    }
+                    QLabel {
+                        font-size: 14pt;
+                        color: rgb(0, 0, 0);
+                        font-family: "MS Shell Dlg 2";
+                    }
+                    QLineEdit {
+                        background-color: rgb(255, 255, 255);
+                        border-radius: 6px;
+                        font-size: 12pt;
+                        color: rgb(0, 0, 0);
+                        font-family: "MS Shell Dlg 2";
+                        padding: 5px;
+
+                    QMessage
+                    }
+                """)
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
