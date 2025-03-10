@@ -10,10 +10,14 @@ dotenv.load_dotenv()
 class Database:
     def __init__(self):
         self.conn = pymysql.connect(
-            host=os.getenv("HOST"),
-            user=os.getenv("USER"),
-            password=os.getenv("PASSWORD"),
-            database=os.getenv("DATABASE")
+            # host=os.getenv("HOST"),
+            # user=os.getenv("USER"),
+            # password=os.getenv("PASSWORD"),
+            # database=os.getenv("DATABASE")
+            host='localhost',
+            user='root',
+            password='',
+            database='sewing_factory'
         )
 
         self.cursor = self.conn.cursor()
@@ -68,6 +72,27 @@ class Database:
             return res, role
 
         return res
+
+    def add_pos(self, pos_name):
+        query = "INSERT INTO role (role_name) VALUES (%s)"
+        self.cursor.execute(query, (pos_name,))
+        self.conn.commit()
+
+    def get_positions(self):
+
+        query = "SELECT id, role_name FROM role"
+        self.cursor.execute(query)
+        positions = self.cursor.fetchall()
+
+        return positions
+
+    def add_worker(self, sur,name, patr, log, pas, role_id):
+        query = """
+            INSERT INTO worker (surname, name, patronymic, login, password, id_role)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        self.cursor.execute(query, (sur, name, patr, log, pas, role_id))
+        self.conn.commit()
 
     def close(self):
         self.cursor.close()
