@@ -13,7 +13,7 @@ class Database:
             host=os.getenv("HOST"),
             user=os.getenv("USER"),
             password=os.getenv("PASSWORD"),
-            database=os.getenv("DATABASE")
+            database=os.getenv("DATABASE"),
         )
 
         self.cursor = self.conn.cursor()
@@ -36,7 +36,7 @@ class Database:
         res = [x for (x,) in self.cursor.fetchall()]
         return res
 
-    def get_write_offs(self, material=None, reason=None):
+    def get_unusable_write_offs(self, material=None, reason=None):
         query = """
             SELECT material_name, width, length,
             quantity, reason, timestamp, quantity * purchase_price
@@ -56,18 +56,56 @@ class Database:
         result = self.cursor.fetchall()
         return result
 
-    def get_personal_data(self, username, password):
-        query = "SELECT * FROM worker WHERE login = %s AND password = %s"
-        self.cursor.execute(query, (username, password))
-        res = self.cursor.fetchone()
+    def get_usable_write_offs(self, material, sort_order):
+        if material == "Все":
+            query = f"""
+                select material_name, quantity, width, length, width * length, 
+                timestamp, purchase_price * quantity
+                from write_off_with_material_data
+                where can_be_used = True
+                order by width * length {sort_order}
+            """
+            self.cursor.execute(query)
+        else:
+            query = f"""
+                select material_name, quantity, width, length, width * length, 
+                timestamp, purchase_price * quantity
+                from write_off_with_material_data
+                where can_be_used = True and material_name = "{material}"
+                order by width * length {sort_order}
+            """
+            self.cursor.execute(query)
 
-        if res:
-            query = "SELECT id_role FROM worker WHERE login = %s AND password = %s"
-            self.cursor.execute(query, (username, password))
-            role = self.cursor.fetchone()[0]
-            return res, role
+        return self.cursor.fetchall()
 
-        return res
+    def add_role(self, role_name):
+        query = "INSERT INTO role (role_name) VALUES (%s)"
+        self.cursor.execute(query, (role_name,))
+        self.conn.commit()
+
+    def get_roles(self):
+        query = "SELECT id, role_name FROM role"
+        self.cursor.execute(query)
+        roles = self.cursor.fetchall()
+
+        return roles
+
+    def add_worker(self, sur, name, patr, log, pas, role_id):
+        query = """
+            INSERT INTO worker (surname, name, patronymic, login, password, id_role)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        self.cursor.execute(query, (sur, name, patr, log, pas, role_id))
+        self.conn.commit()
+
+    def get_textile_materials(self):
+        query = """
+                    select distinct m.name 
+                    from material m inner join material_category cat on m.id_category = cat.id
+                    where cat.name = "Ткань" 
+                """
+        self.cursor.execute(query)
+        return  [material[0] for material in self.cursor.fetchall()]
 
     def close(self):
         self.cursor.close()

@@ -6,15 +6,14 @@ from app.ui.write_offs_ui_form import Ui_Form
 
 
 class WriteOffsWindow(QtWidgets.QWidget):
-    def __init__(self):
+    def __init__(self, db):
         super().__init__()
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
         self.setWindowTitle("Остатки ткани")
 
-        self.db = Database()
-        self.cursor = self.db.cursor
+        self.db = db
 
         self.configure_table_headers()
         self.configure_material_combobox()
@@ -49,7 +48,7 @@ class WriteOffsWindow(QtWidgets.QWidget):
         selected_material = self.ui.material_combobox.currentText()
         selected_reason = self.ui.reason_combobox.currentText()
 
-        data = self.db.get_write_offs(
+        data = self.db.get_unusable_write_offs(
             material=selected_material if selected_material else None,
             reason=selected_reason if selected_reason else None
         )
@@ -144,7 +143,11 @@ class WriteOffsWindow(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     import sys
+
     app = QtWidgets.QApplication(sys.argv)
-    form = WriteOffsWindow()
+
+    db = Database()
+    form = WriteOffsWindow(db)
     form.show()
+
     sys.exit(app.exec())

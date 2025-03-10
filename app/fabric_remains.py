@@ -1,10 +1,9 @@
-import os
 import sys
 
 import dotenv
 from PyQt6.QtWidgets import QApplication, QWidget, QTableWidgetItem, QHeaderView
-import pymysql
 
+from app.db import Database
 from app.ui.fabric_remains_ui_form import Ui_Form
 
 
@@ -12,16 +11,10 @@ dotenv.load_dotenv()
 
 
 class FabricRemainsWindow(QWidget):
-    def __init__(self):
+    def __init__(self, db):
         super().__init__()
 
-        self.db = pymysql.connect(
-            host=os.getenv("HOST"),
-            user=os.getenv("USER"),
-            password=os.getenv("PASSWORD"),
-            database=os.getenv("DATABASE")
-        )
-        self.cursor = self.db.cursor()
+        self.db = db
 
         self.ui = Ui_Form()
         self.ui.setupUi(self)
@@ -53,20 +46,13 @@ class FabricRemainsWindow(QWidget):
         материала и для всех сразу
         :return:
         """
-
-        query = """
-            select distinct m.name 
-            from material m inner join material_category cat on m.id_category = cat.id
-            where cat.name = "Ткань" 
-        """
-        self.cursor.execute(query)
-        materials = self.cursor.fetchall()
+        materials = self.db.get_textile_materials()
 
         self.ui.comboBox.addItem("Все")
         for material in materials:
-            self.ui.comboBox.addItem(material[0])
+            self.ui.comboBox.addItem(material)
 
-    def get_remains(self):
+    def get_usable_write_offs(self):
         """
         Возвращает список строк из таблицы "wite_off", который
         отфильтрован и отсортирован согласно комбобоксам
@@ -75,26 +61,7 @@ class FabricRemainsWindow(QWidget):
         material = self.ui.comboBox.currentText()
         sort_order = "ASC" if self.ui.radioButton.isChecked() else "DESC"
 
-        if material == "Все":
-            query = f"""
-                        select material_name, quantity, width, length, width * length, 
-                        timestamp, purchase_price * quantity
-                        from write_off_with_material_data
-                        where can_be_used = True
-                        order by width * length {sort_order}
-                    """
-            self.cursor.execute(query)
-        else:
-            query = f"""
-                        select material_name, quantity, width, length, width * length, 
-                        timestamp, purchase_price * quantity
-                        from write_off_with_material_data
-                        where can_be_used = True and material_name = "{material}"
-                        order by width * length {sort_order}
-                    """
-            self.cursor.execute(query)
-
-        return self.cursor.fetchall()
+        return self.db.get_usable_write_offs(material, sort_order)
 
     def add_total_cost_line(self, remains):
         total_remains_cost = sum([r[-1] for r in remains])
@@ -117,7 +84,7 @@ class FabricRemainsWindow(QWidget):
     def update_table(self):
         self.ui.tableWidget.clearContents()
 
-        remains = self.get_remains()
+        remains = self.get_usable_write_offs()
 
         self.ui.tableWidget.setRowCount(len(remains) + 1)
 
@@ -135,13 +102,8 @@ class FabricRemainsWindow(QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    db_connection = pymysql.connect(
-        host=os.getenv("HOST"),
-        user=os.getenv("USER"),
-        password=os.getenv("PASSWORD"),
-        database=os.getenv("DATABASE")
-    )
-
-    window = FabricRemainsWindow()
+    db = Database()
+    window = FabricRemainsWindow(db)
     window.show()
+
     sys.exit(app.exec())

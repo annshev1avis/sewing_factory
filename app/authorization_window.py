@@ -6,6 +6,7 @@ import pymysql
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QApplication
 
+from app.db import Database
 from app.main_window import MainWindow
 from app.ui.authorization_ui_form import Ui_Form
 
@@ -43,16 +44,15 @@ class CustomMessageBox(QtWidgets.QMessageBox):
 
 
 class AuthorizationWindow(QtWidgets.QWidget):
-    def __init__(self, allowed_roles, main_window_class):
+    def __init__(self, allowed_roles, db_for_other_windows):
         """
         :param allowed_roles: список с id разрешенных ролей
-        :param main_window_class: ссылка на КЛАСС окна,
-        которое должно открываться после авторизации
+        :param db_for_other_windows: объект Database, который используется при создании дочерних окон
         """
         super().__init__()
 
         self.allowed_roles = allowed_roles
-        self.main_window_class = main_window_class
+        self.db_for_other_windows = db_for_other_windows
 
         self.setWindowTitle("Авторизация")
         self.ui = Ui_Form()
@@ -103,8 +103,13 @@ class AuthorizationWindow(QtWidgets.QWidget):
             self.show_error_message("Неподходящая роль для входа в данный модуль.")
             return
 
-        self.write_offs = self.main_window_class()
-        self.write_offs.show()
+        if user[1] == 1:  # менеджер
+            pass
+        elif user[1] == 2:  # директор
+            pass
+
+        self.main_window = MainWindow(self.db_for_other_windows)
+        self.main_window.show()
         self.close()
 
     def show_error_message(self, message):
@@ -123,10 +128,10 @@ class AuthorizationWindow(QtWidgets.QWidget):
 if __name__ == "__main__":
     app = QApplication(sys.argv)
 
-    # подставить данные своего модуля
+    db = Database()
     authorization = AuthorizationWindow(
         allowed_roles=[1, 2],
-        main_window_class=MainWindow,
+        db_for_other_windows=db
     )
     authorization.show()
     sys.exit(app.exec())
