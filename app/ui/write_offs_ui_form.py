@@ -4,22 +4,40 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(1070, 695)
+        Form.resize(1027, 604)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("resources/logo-02.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         Form.setWindowIcon(icon)
         Form.setStyleSheet("""
-            #Form {
-                background-color: rgb(181, 213, 202);
+            #Form{
+                background-color:rgb(181, 213, 202);
+            }
+            QPushButton{
+                background-color: rgb(224, 169, 175); /* Зеленый цвет */
+                border: none; /* Убираем рамку */
+                border-radius: 6px; /* Скругленные края */
+                font-size: 10pt;
             }
             QTableWidget{
-                background-color: rgb(255, 252, 214);           
+                background-color: rgb(255, 252, 214);
             }
-        """)
+        )""")
         self.verticalLayout = QtWidgets.QVBoxLayout(Form)
         self.verticalLayout.setObjectName("verticalLayout")
         self.horizontalLayout_3 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_3.setObjectName("horizontalLayout_3")
+        self.icon_label = QtWidgets.QLabel(parent=Form)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.icon_label.sizePolicy().hasHeightForWidth())
+        self.icon_label.setSizePolicy(sizePolicy)
+        self.icon_label.setMinimumSize(QtCore.QSize(60, 60))
+        self.icon_label.setMaximumSize(QtCore.QSize(60, 60))
+        self.icon_label.setPixmap(QtGui.QPixmap("resources/logo-02.jpg"))
+        self.icon_label.setScaledContents(True)
+        self.icon_label.setObjectName("icon_label")
+        self.horizontalLayout_3.addWidget(self.icon_label)
         self.title_label = QtWidgets.QLabel(parent=Form)
         font = QtGui.QFont()
         font.setPointSize(16)
@@ -85,22 +103,11 @@ class Ui_Form(object):
         self.graph_pushbutton.setObjectName("graph_pushbutton")
         self.horizontalLayout_3.addWidget(self.graph_pushbutton)
         self.verticalLayout.addLayout(self.horizontalLayout_3)
-        self.icon_label = QtWidgets.QLabel(parent=Form)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.icon_label.sizePolicy().hasHeightForWidth())
-        self.icon_label.setSizePolicy(sizePolicy)
-        self.icon_label.setText("")
-        # self.icon_label.setPixmap(QtGui.QPixmap("resources/logo-01.jpg"))
-        self.icon_label.setScaledContents(True)
-        self.icon_label.setObjectName("icon_label")
-        self.verticalLayout.addWidget(self.icon_label)
         self.scrollArea = QtWidgets.QScrollArea(parent=Form)
         self.scrollArea.setWidgetResizable(True)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
-        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1003, 486))
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 1003, 509))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.scrollAreaWidgetContents)
         self.horizontalLayout.setObjectName("horizontalLayout")
@@ -117,9 +124,8 @@ class Ui_Form(object):
 
     def retranslateUi(self, Form):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
+        Form.setWindowTitle(_translate("Form", "Списанные материалы"))
         self.title_label.setText(_translate("Form", "Списанные материалы"))
         self.material_label.setText(_translate("Form", "Выбрать материал:"))
         self.reason_label.setText(_translate("Form", "Выбрать причину:"))
-        self.graph_pushbutton.setText(_translate("Form", "Построить\n"
-"график"))
+        self.graph_pushbutton.setText(_translate("Form", "Построить\nграфик"))

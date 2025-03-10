@@ -2,9 +2,9 @@ import sys
 
 from PyQt6.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout
 
-from ui.main_window_ui_form import Ui_Form
-from fabric_remains import FabricRemainsWindow
-from write_offs import WriteOffsWindow
+from app.ui.main_window_ui_form import Ui_Form
+from app.fabric_remains import FabricRemainsWindow
+from app.write_offs import WriteOffsWindow
 
 
 class MainWindow(QWidget):

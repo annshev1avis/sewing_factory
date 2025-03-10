@@ -6,8 +6,8 @@ import pymysql
 from PyQt6 import QtWidgets
 from PyQt6.QtWidgets import QApplication
 
-from main_window import MainWindow
-from ui.authorization_ui_form import Ui_Form
+from app.main_window import MainWindow
+from app.ui.authorization_ui_form import Ui_Form
 
 
 dotenv.load_dotenv()
