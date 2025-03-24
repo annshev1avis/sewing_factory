@@ -83,6 +83,11 @@ class Database:
         self.cursor.execute(query, (role_name,))
         self.conn.commit()
 
+    def delete_role(self, role_id):
+        query = f"delete from role where id = {role_id}"
+        self.cursor.execute(query)
+        self.conn.commit()
+
     def get_roles(self):
         query = "SELECT id, role_name FROM role"
         self.cursor.execute(query)
@@ -98,6 +103,35 @@ class Database:
         self.cursor.execute(query, (sur, name, patr, log, pas, role_id))
         self.conn.commit()
 
+    def delete_worker(self, worker_id):
+        query = f"""
+            delete from worker where id = {worker_id}
+        """
+        self.cursor.execute(query)
+        self.conn.commit()
+
+    def get_worker_by_id(self, worker_id):
+        self.cursor.execute(f"""
+            select id, surname, name, patronymic, id_role
+            from worker
+            where id = {worker_id}
+        """)
+        return self.cursor.fetchone()
+
+    def update_worker(self, worker_id, surname, name, patronymic, role_id):
+        self.cursor.execute(
+            """
+                UPDATE worker
+                SET surname = %s, 
+                name = %s,
+                patronymic = %s,
+                id_role = %s
+                WHERE id = %s
+            """,
+            (surname, name, patronymic, role_id, worker_id)
+        )
+        self.conn.commit()
+
     def get_textile_materials(self):
         query = """
                     select distinct m.name 
@@ -109,11 +143,11 @@ class Database:
 
     def get_employees(self):
         query = """
-            select concat(surname, ' ', name, ' ', patronymic, ' (' , role_name, ')') FROM worker 
+            select worker.id, surname, name, patronymic, role_name FROM worker 
             inner join role on role.id = worker.id_role
-                """
+        """
         self.cursor.execute(query)
-        return [x for (x,) in self.cursor.fetchall()]
+        return self.cursor.fetchall()
 
     def close(self):
         self.cursor.close()
