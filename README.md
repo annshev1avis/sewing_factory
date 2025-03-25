@@ -10,11 +10,6 @@ git clone https://github.com/annshev1avis/sewing_factory.git
 pip install -r requirements.txt
 ```
 
-## Временное окно `presentation_window`
-
-Окно `presentation_window` используется для презентации функциональности модуля. Оно является временным и будет удалено после интеграции модуля с другими компонентами системы.
-
-
 ---
 
 ## Участники проекта
